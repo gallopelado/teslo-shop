@@ -41,10 +41,20 @@ export class ProductsService {
       return of();
     }
 
-    return this.http.get<Product>(`${baseUrl}/products/${ idSlug }`)
+    return this.http.get<Product>(`${baseUrl}/products/${ idSlug }`);
+
+  }
+
+  getProductsByGender(gender: string): Observable<ProductsResponse> {
+
+    if ( !gender ) {
+      return of();
+    }
+
+    return this.http.get<ProductsResponse>(`${baseUrl}/products?gender=${ gender }`)
       .pipe(
-        tap( resp => console.log(resp))
-      )
+          tap( resp => console.log(resp))
+        )
 
   }
 
