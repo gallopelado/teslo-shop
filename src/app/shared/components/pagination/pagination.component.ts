@@ -1,8 +1,9 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, linkedSignal, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-pagination',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './pagination.component.html',
 })
 export class PaginationComponent {
@@ -10,6 +11,9 @@ export class PaginationComponent {
   pages = input(0);
   // página por defecto
   currentPage = input<number>(1);
+
+  // se recomienda, al ser una señal basada en otra señal
+  activePage = linkedSignal(this.currentPage);
 
   // genera números
   getPagesList = computed(() => {
