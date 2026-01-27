@@ -1,10 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { ProductCardComponent } from '@/products/components/product-card/product-card.component';
 import { ProductsService } from '@/products/services/products.service';
-import { rxResource, toSignal } from '@angular/core/rxjs-interop';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { PaginationComponent } from "@/shared/components/pagination/pagination.component";
-import { ActivatedRoute } from '@angular/router';
-import { map } from 'rxjs';
+import { PaginationService } from '@/shared/components/pagination/pagination.service';
 
 @Component({
   selector: 'app-home-page',
@@ -14,8 +13,9 @@ import { map } from 'rxjs';
 export class HomePageComponent {
 
   productsService = inject(ProductsService);
+  paginationService = inject(PaginationService);
 
-  activatedRoute = inject(ActivatedRoute);
+  /* activatedRoute = inject(ActivatedRoute);
 
   // el queryparams puede ser nulo
   currentPage = toSignal(
@@ -27,11 +27,11 @@ export class HomePageComponent {
       // siempre va a retornar un valor numérico
       initialValue: 1,
     }
-  );
+  ); */
 
   productsResource = rxResource({
     // empieza en 0 por eso restamos 1
-    request: () => ({ page: this.currentPage() - 1 }),
+    request: () => ({ page: this.paginationService.currentPage() - 1 }),
     loader: ( { request } ) => {
       return this.productsService.getProducts({
         // traer de 9 en 9
