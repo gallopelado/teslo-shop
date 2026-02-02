@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Product, ProductsResponse } from '../interfaces/product.interface';
-import { Observable, of, tap } from 'rxjs';
+import { Observable, of, tap, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 const baseUrl = environment.baseUrl;
@@ -20,6 +20,7 @@ export class ProductsService {
   private http = inject(HttpClient);
 
   private productsCache = new Map<string,ProductsResponse>();
+  private productCache = new Map<string, Product>();
 
   getProducts(options: Options): Observable<ProductsResponse> {
 
@@ -46,11 +47,20 @@ export class ProductsService {
   getProductByIdSlug(idSlug: string): Observable<Product> {
 
     if ( !idSlug ) {
-      return of();
+      return throwError(() => 'ID o Slug es requerido');
     }
 
-    return this.http.get<Product>(`${baseUrl}/products/${ idSlug }`);
+    if (this.productCache.has(idSlug)) {
+      return of(this.productCache.get(idSlug)!);
+    }
 
+    return this.http.get<Product>(`${baseUrl}/products/${ idSlug }`)
+      .pipe(
+        tap(resp => console.log(resp)),
+        tap(resp => {
+          this.productCache.set(idSlug, resp);
+        })
+      );
   }
 
   getProductsByGender(gender: string): Observable<ProductsResponse> {
