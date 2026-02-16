@@ -40,6 +40,8 @@ export class AuthService {
     return this._user();
   });
 
+  userRoles = computed(() => this._user()?.roles || []);
+
   token = computed<string|null>(() => {
     return this._token();
   });
