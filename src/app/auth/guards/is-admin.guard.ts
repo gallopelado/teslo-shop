@@ -21,7 +21,9 @@ export const IsAdminGuard: CanMatchFn = async(
 
   const roles = authService.userRoles();
 
-  if(roles && roles.includes('super')) {
+  // TODO: Esto podría usarse en is-admin.guard
+  // isAdmin de auth.service
+  if(roles && roles.includes('admin')) {
     return true;
   }
 

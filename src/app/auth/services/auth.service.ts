@@ -46,6 +46,9 @@ export class AuthService {
     return this._token();
   });
 
+  // TODO: Esto podría usarse en is-admin.guard
+  isAdmin = computed(() => this._user()?.roles.includes('admin') ?? false);
+
   createUser(fullName: string, email: string, password: string) {
     return this.http.post<AuthResponse>(`${ baseUrl }/auth/register`, {
       fullName: fullName, email: email, password: password
