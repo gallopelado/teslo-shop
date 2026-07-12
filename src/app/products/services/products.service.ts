@@ -63,6 +63,23 @@ export class ProductsService {
       );
   }
 
+  getProductById(id: string): Observable<Product> {
+    if (!id) {
+      return throwError(() => 'ID es requerido');
+    }
+
+    if (this.productCache.has(id)) {
+      return of(this.productCache.get(id)!);
+    }
+
+    return this.http.get<Product>(`${baseUrl}/products/${ id }`)
+      .pipe(
+        tap(resp => {
+          this.productCache.set(id, resp);
+        })
+      );
+  }
+
   getProductsByGender(gender: string): Observable<ProductsResponse> {
 
     if ( !gender ) {
